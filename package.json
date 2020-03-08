@@ -1,0 +1,12 @@
+{
+  "name": "night",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "nightmare": "^3.0.2",
+    "nightmare-real-mouse": "^1.1.0",
+    "nightmare-webrequest-addon": "^1.0.2"
+  }
+}
