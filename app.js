@@ -17,6 +17,7 @@ class TT {
             .build();
         try {
             // Navigate to Url
+            let mobile= '18217519889'
             await driver.get('http://api2.zpton.com/Wx/login.html');
             // Enter text "cheese" and perform keyboard action "Enter"
             // await driver.findElement(By.name('q')).sendKeys('cheese', Key.ENTER);
@@ -36,45 +37,65 @@ class TT {
             await driver.wait(until.elementsLocated((By.className('tui_list'))));
             await sleep(1000)
             console.log(1);
-            await driver.findElement(By.className('index_user_left')).click()
+            // await driver.findElement(By.className('index_user_left')).click()
+            await driver.get('http://api2.zpton.com/Wx/list.html')
             console.log(2);
             await sleep(1000)
+            await driver.wait(until.elementTextMatches((await driver.findElements(By.className('kc_r1')))[0],/^\s*/g));
+
+            await driver.navigate().refresh()
             await driver.wait(until.elementsLocated((By.className('kc_r2'))))
             await sleep(5000)
             let cc = await driver.findElements(By.className('kc_list'))
-            for(let ccitem of cc){
-                let ccid=(await ccitem.getAttribute('data-id'))
-                console.log(ccid)
-                driver.executeScript(`
-                    let tokenx = localStorage.getItem('token')
-                   window.location.href="http://api2.zpton.com/Wx/main.html?id=${ccid}&token="+tokenx
+            let token = await driver.executeScript(`
+                  return localStorage.getItem('token');
                 `)
-                // await ccitem.findElement(By.className('kc_left')).click()
+            let mainWin = (await driver.getWindowHandle())
+            for(let ccitem of cc){
+                let ccid = await ccitem.getAttribute('data-id')
+                console.log(ccid)
+                let ccurl = `http://api2.zpton.com/Wx/main.html?id=${ccid}&token=${token}`;
+                await driver.executeScript(`
+                   window.open("${ccurl}")
+                `)
                 await sleep(2000)
+                console.log(await driver.getWindowHandle())
                 await driver.wait(until.elementsLocated((By.className('kssk'))))
                 await sleep(1000)
                 await driver.findElement(By.className('kssk')).click()
+                console.log(123123)
+                await sleep(1000)
                 await driver.wait(until.elementsLocated((By.className('directory_am'))))
                 await sleep(1000)
                 await driver.findElement(By.className('head_left')).click()
-                await sleep(1000)
-                await driver.wait(until.elementsLocated((By.className('cmli'))))
-                let xuexi =  await driver.findElements(By.className('cmli'))
-                let menu = await driver.getCurrentUrl();
-
-                for(let item of xuexi)
-                {
-                    console.log(await driver.getCurrentUrl())
-                    let id=(await item.findElement(By.className('cmlileft')).getAttribute('data_id'))
-                    let url = menu+"&ksid="+''+id
-                    await driver.get(url)
-                    await sleep(2000)
-                }
+                // let lesson = `http://api2.zpton.com/Wx/class_menu.html?lesson=${ccid}&username=${mobile}&token=${token}`
+                // await driver.executeScript(`
+                //    window.open("${lesson}")
+                // `)
+                // await driver.switchTo().newWindow(lesson)
+                // await ccitem.findElement(By.className('kc_left')).click()
+                // await sleep(2000)
+                // await driver.wait(until.elementsLocated((By.className('kssk'))))
+                // await sleep(1000)
+                // await driver.findElement(By.className('kssk')).click()
+                // await driver.wait(until.elementsLocated((By.className('directory_am'))))
+                // await sleep(1000)
+                // await driver.findElement(By.className('head_left')).click()
+                // await sleep(1000)
+                // await driver.wait(until.elementsLocated((By.className('cmli'))))
+                // let xuexi =  await driver.findElements(By.className('cmli'))
+                // let menu = await driver.getCurrentUrl();
+                //
+                // for(let item of xuexi)
+                // {
+                //     console.log(await driver.getCurrentUrl())
+                //     let id=(await item.findElement(By.className('cmlileft')).getAttribute('data_id'))
+                //     let url = menu+"&ksid="+''+id
+                //     await driver.get(url)
+                //     await sleep(2000)
+                // }
             }
-
-
-
-
+            await driver.switchTo().window(mainWin)
             // let firstResult = await driver.wait(
             //     until.elementIsVisible(driver.findElement(By.className('tui_list')))
             // )
